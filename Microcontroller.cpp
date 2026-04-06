@@ -7,8 +7,8 @@ void Microcontroller::control_loop() {
     water_add_cmd_out.write(false);
 
     while (true) {
-        double level = water_level_in.read();
-        bool cmd = water_add_cmd_out.read();
+        double level = sensor_water_level_in.read();
+        bool cmd = actuator_water_add_cmd_out.read();
 
         // Hysteresis-style fill logic
         if (level < low_threshold) {
