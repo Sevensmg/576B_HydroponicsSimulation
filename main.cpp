@@ -1,5 +1,5 @@
 // Main Top-Level file for system implementation 
-// Created 4-6-26 -7
+// Created 4-6-26
 
 #include <systemc.h>
 #include "Microcontroller.h"
@@ -15,14 +15,14 @@ int sc_main(int argc, char* argv[]) {
     WaterAddSolenoid sol("sol");
     PhysicalModel phys("phys");
 
-    mc.water_level_in(water_level_sig);
-    mc.water_add_cmd_out(solenoid_cmd_sig);
+    mc.sensor_water_level_in(water_level_sig);
+    mc.actuator_water_add_cmd_out(water_add_cmd_sig);
 
-    sol.cmd_in(solenoid_cmd_sig);
-    sol.active_out(solenoid_active_sig);
+    sol.actuator_water_add_cmd_in(water_add_cmd_sig);
+    sol.actuator_water_add_active_out(water_add_active_sig);
 
-    phys.solenoid_active_in(solenoid_active_sig);
-    phys.water_level_out(water_level_sig);
+    phys.actuator_water_add_active_in(water_add_active_sig);
+    phys.sensor_water_level_out(water_level_sig);
 
     sc_start(24, SC_HOUR);
     return 0;

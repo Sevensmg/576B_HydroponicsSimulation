@@ -12,6 +12,8 @@ find_package(SystemCLanguage CONFIG REQUIRED)
 add_executable(hydro_sim
     main.cpp
     Microcontroller.cpp
+    WaterAddSolenoid.cpp
+    PhysicalModel.cpp
 )
 
 target_link_libraries(hydro_sim PRIVATE SystemC::systemc)
