@@ -1,5 +1,4 @@
 #include "WaterLevelSensor.h"
-#include "PhysicalModel.h"          // access to max_water_level
 #include <iostream>
 #include <iomanip>
 
@@ -16,7 +15,7 @@ double WaterLevelSensor::clamp(double value, double min_value, double max_value)
 void WaterLevelSensor::sample_loop() {
     // Initialize output once at time 0
     double true_level = physical_water_level_in.read();
-    double measured_level = clamp((true_level / max_water_level) * 100 + sensor_bias,
+    double measured_level = clamp((true_level / 45) * 100 + sensor_bias,
                                   min_measurable_level,
                                   max_measurable_level);
     sensor_water_level_out.write(measured_level);
@@ -25,7 +24,7 @@ void WaterLevelSensor::sample_loop() {
         true_level = physical_water_level_in.read();
 
         // Measurement model: Real volume -> percent full
-        measured_level = (true_level / max_water_level) * 100 + sensor_bias;
+        measured_level = (true_level / 45) * 100 + sensor_bias;
 
         // Clamp
         measured_level = clamp(measured_level,

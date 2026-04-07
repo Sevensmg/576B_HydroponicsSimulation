@@ -40,7 +40,7 @@ void PhysicalModel::update_model() {
         std::cout << "[" << sc_time_stamp() << "] "
                   << "PhysicalModel: water_level="
                   << std::fixed << std::setprecision(2)
-                  << water_level << "%, solenoid_active="
+                  << water_level << "L, solenoid_active="
                   << solenoid_active
                   << std::endl;
 

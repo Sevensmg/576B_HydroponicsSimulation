@@ -4,7 +4,6 @@
 #define MICROCONTROLLER_H
 
 #include <systemc.h>
-#include "PhysicalModel.h"          // Access to max_water_level
 
 SC_MODULE(Microcontroller) {
 public:
