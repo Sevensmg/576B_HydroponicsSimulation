@@ -7,23 +7,41 @@
 #include "PhysicalModel.h"
 
 int sc_main(int argc, char* argv[]) {
-    sc_signal<double> water_level_sig;
-    sc_signal<bool> water_add_cmd_sig;
-    sc_signal<bool> water_add_active_sig;
+    // Variables
+        // Variables will either be sensor, actuator, or physical. The controller will read from sensor and send to actuator.
+    sc_signal<double> sensor_water_level_sig;
+    sc_signal<double> physical_water_level_sig;
+    sc_signal<bool> actuator_water_add_cmd_sig;
+    sc_signal<bool> actuator_water_add_active_sig;
 
+    // Module Instantiation
     Microcontroller mc("mc");
     WaterAddSolenoid sol("sol");
     PhysicalModel phys("phys");
 
-    mc.sensor_water_level_in(water_level_sig);
-    mc.actuator_water_add_cmd_out(water_add_cmd_sig);
+    // Connect Ports on Modules
+        // Controller
+            // Microcontroller
+    mc.sensor_water_level_in(sensor_water_level_sig);
+    mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
 
-    sol.actuator_water_add_cmd_in(water_add_cmd_sig);
-    sol.actuator_water_add_active_out(water_add_active_sig);
+        // Actuators
+            // Water Add Solenoid
+    sol.actuator_water_add_cmd_in(actuator_water_add_cmd_sig);
+    sol.actuator_water_add_active_out(actuator_water_add_active_sig);
 
-    phys.actuator_water_add_active_in(water_add_active_sig);
-    phys.sensor_water_level_out(water_level_sig);
+        // Sensors
+            // Water Level Sensor
+    water_sensor.physical_water_level_in(physical_water_level_sig);
+    water_sensor.sensor_water_level_out(sensor_water_level_sig);
 
+        // Enviroment (Physical)
+            // Water Level
+    phys.actuator_water_add_active_in(actuator_water_add_active_sig);
+    phys.physical_water_level_out(physical_water_level_sig);
+
+    // Simulation 
     sc_start(24, SC_SEC);
+
     return 0;
 }

@@ -4,6 +4,7 @@
 #define MICROCONTROLLER_H
 
 #include <systemc.h>
+#include "PhysicalModel.h"          // Access to max_water_level
 
 SC_MODULE(Microcontroller) {
 public:
@@ -14,14 +15,17 @@ public:
     sc_out<bool> actuator_water_add_cmd_out;
 
     // Tunable parameters
+        // Water Level
     double low_threshold;
     double full_threshold;
     sc_time control_period;
 
-    SC_CTOR(Microcontroller)
-        : low_threshold(90.0),
-          full_threshold(100.0),
-          control_period(sc_time(1, SC_SEC))
+    SC_CTOR(Microcontroller) :
+        // Water Level - Ideal is 88.88-%
+        low_threshold(88.88 - 5),
+        full_threshold(88.88 + 3),
+        // Time Step
+        control_period(sc_time(1, SC_SEC))
     {
         SC_THREAD(control_loop);
     }

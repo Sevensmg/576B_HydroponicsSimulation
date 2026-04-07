@@ -3,14 +3,14 @@
 #include <iomanip>
 
 void Microcontroller::control_loop() {
-    // Safe startup state
+    // Start off in case of no signal
     actuator_water_add_cmd_out.write(false);
 
     while (true) {
         double level = sensor_water_level_in.read();
         bool cmd = actuator_water_add_cmd_out.read();
 
-        // Hysteresis-style fill logic
+        // Fill logic
         if (level < low_threshold) {
             cmd = true;
         } else if (level >= full_threshold) {
