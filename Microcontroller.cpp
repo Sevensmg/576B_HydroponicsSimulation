@@ -4,7 +4,7 @@
 
 void Microcontroller::control_loop() {
     // Safe startup state
-    water_add_cmd_out.write(false);
+    actuator_water_add_cmd_out.write(false);
 
     while (true) {
         double level = sensor_water_level_in.read();
@@ -17,7 +17,7 @@ void Microcontroller::control_loop() {
             cmd = false;
         }
 
-        water_add_cmd_out.write(cmd);
+        actuator_water_add_cmd_out.write(cmd);
 
         std::cout << "[" << sc_time_stamp() << "] "
                   << "MCU: water_level=" << std::fixed << std::setprecision(2)
