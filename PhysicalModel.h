@@ -9,7 +9,7 @@ public:
     sc_in<bool> actuator_water_add_active_in;
 
     // Outputs
-    sc_out<double> sensor_water_level_out;
+    sc_out<double> physical_water_level_out;
 
     // Water level state and parameters
     double water_level;

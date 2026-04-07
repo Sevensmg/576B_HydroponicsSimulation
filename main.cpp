@@ -5,6 +5,7 @@
 #include "Microcontroller.h"
 #include "WaterAddSolenoid.h"
 #include "PhysicalModel.h"
+#include "WaterLevelSensor.h"
 
 int sc_main(int argc, char* argv[]) {
     // Variables
@@ -18,6 +19,7 @@ int sc_main(int argc, char* argv[]) {
     Microcontroller mc("mc");
     WaterAddSolenoid sol("sol");
     PhysicalModel phys("phys");
+    WaterLevelSensor wsen("wsen");
 
     // Connect Ports on Modules
         // Controller
@@ -32,8 +34,8 @@ int sc_main(int argc, char* argv[]) {
 
         // Sensors
             // Water Level Sensor
-    water_sensor.physical_water_level_in(physical_water_level_sig);
-    water_sensor.sensor_water_level_out(sensor_water_level_sig);
+    wsen.physical_water_level_in(physical_water_level_sig);
+    wsen.sensor_water_level_out(sensor_water_level_sig);
 
         // Enviroment (Physical)
             // Water Level
