@@ -8,21 +8,21 @@
 SC_MODULE(Microcontroller) {
 public:
     // Inputs
-    sc_in<double> sensor_water_level_in;
+    sc_in<double> sensor_ph_level_in;
 
     // Outputs
-    sc_out<bool> actuator_water_add_cmd_out;
+    sc_out<bool> actuator_ph_add_cmd_out;
 
     // Tunable parameters
-        // Water Level
+        // ph Level
     double low_threshold;
-    double full_threshold;
+    double high_threshold;
     sc_time control_period;
 
     SC_CTOR(Microcontroller) :
-        // Water Level - Ideal is 88.88-%
-        low_threshold(88.88 - 5),
-        full_threshold(88.88 + 3),
+        // PH Level - Ideal is 5.5-6.5
+        low_threshold(6 - 0.5),
+        high_threshold(6 + 0.5),
         // Time Step
         control_period(sc_time(1, SC_SEC))
     {

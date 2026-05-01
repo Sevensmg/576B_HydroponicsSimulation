@@ -14,33 +14,34 @@ double PhysicalModel::clamp(double value, double min_value, double max_value) {
 
 void PhysicalModel::update_model() {
     // Write initial condition
-    physical_water_level_out.write(water_level);
+    physical_ph_level_out.write(ph_level);
 
     while (true) {
-        bool solenoid_active = actuator_water_add_active_in.read();
+        bool solenoid_active = actuator_ph_add_active_in.read();
 
-        // Natural water loss
-        water_level -= water_loss_rate_per_step;
-
-        // Water addition from solenoid
+        // Natural water alkalinization
+        ph_level += base_increase_rate_per_step;
+        //Assuming our plants make water more alkaline
+        //Need to model increase acidity
+        // Acid addition from solenoid
         if (solenoid_active) {
-            water_level += water_fill_rate_per_step;
+            ph_level += acid_increase_rate_per_step;
         }
 
         // Clamp to valid bounds
-        water_level = clamp(
-            water_level,
-            min_water_level,
-            max_water_level
+        ph_level = clamp(
+            ph_level,
+            min_ph_level,
+            max_ph_level
         );
 
         // Publish updated water level
-        physical_water_level_out.write(water_level);
+        physical_ph_level_out.write(ph_level);
 
         std::cout << "[" << sc_time_stamp() << "] "
-                  << "PhysicalModel: water_level="
+                  << "PhysicalModel: ph_level="
                   << std::fixed << std::setprecision(2)
-                  << water_level << "L, solenoid_active="
+                  << ph_level << " solenoid_active="
                   << solenoid_active
                   << std::endl;
 

@@ -4,24 +4,28 @@
 
 void Microcontroller::control_loop() {
     // Start off in case of no signal
-    actuator_water_add_cmd_out.write(false);
-
+    actuator_ph_add_cmd_out.write(false);;
+    
     while (true) {
-        double level = sensor_water_level_in.read();
-        bool cmd = actuator_water_add_cmd_out.read();
 
+        double level = sensor_ph_level_in.read();
+        bool cmd = actuator_ph_add_cmd_out.read();
+       
         // Fill logic
-        if (level < low_threshold) {
+        if ((level < low_threshold || level > high_threshold)) {
+
             cmd = true;
-        } else if (level >= full_threshold) {
+        } 
+        
+        else{//if (level > low_threshold && level < high_threshold) {
             cmd = false;
         }
 
-        actuator_water_add_cmd_out.write(cmd);
-
+       actuator_ph_add_cmd_out.write(cmd);
+       
         std::cout << "[" << sc_time_stamp() << "] "
-                  << "MCU: water_level=" << std::fixed << std::setprecision(2)
-                  << level << "%, water_add_cmd=" << cmd
+                  << "MCU: ph_level=" << std::fixed << std::setprecision(2)
+                  << level << " ph_add_cmd=" << cmd
                   << std::endl;
 
         wait(control_period);

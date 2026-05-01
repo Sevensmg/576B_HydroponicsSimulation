@@ -3,47 +3,47 @@
 
 #include <systemc.h>
 #include "Microcontroller.h"
-#include "WaterAddSolenoid.h"
+#include "PhAddSolenoid.h"
 #include "PhysicalModel.h"
-#include "WaterLevelSensor.h"
+#include "PhLevelSensor.h"
 
 int sc_main(int argc, char* argv[]) {
     // Variables
         // Variables will either be sensor, actuator, or physical. The controller will read from sensor and send to actuator.
-    sc_signal<double> sensor_water_level_sig;
-    sc_signal<double> physical_water_level_sig;
-    sc_signal<bool> actuator_water_add_cmd_sig;
-    sc_signal<bool> actuator_water_add_active_sig;
-
+    sc_signal<double> sensor_ph_level_sig;
+    sc_signal<double> physical_ph_level_sig;
+    sc_signal<bool> actuator_ph_add_cmd_sig;
+    sc_signal<bool> actuator_ph_add_active_sig;
+ 
     // Module Instantiation
     Microcontroller mc("mc");
-    WaterAddSolenoid sol("sol");
+    PhAddSolenoid phsol("phsol");
     PhysicalModel phys("phys");
-    WaterLevelSensor wsen("wsen");
+    PhSensor phsen("phsen");
 
     // Connect Ports on Modules
         // Controller
             // Microcontroller
-    mc.sensor_water_level_in(sensor_water_level_sig);
-    mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
+    mc.sensor_ph_level_in(sensor_ph_level_sig);
+    mc.actuator_ph_add_cmd_out(actuator_ph_add_cmd_sig);
 
         // Actuators
-            // Water Add Solenoid
-    sol.actuator_water_add_cmd_in(actuator_water_add_cmd_sig);
-    sol.actuator_water_add_active_out(actuator_water_add_active_sig);
+            // Acid Add Solenoid
+    phsol.actuator_ph_add_cmd_in(actuator_ph_add_cmd_sig);
+    phsol.actuator_ph_add_active_out(actuator_ph_add_active_sig);
 
         // Sensors
-            // Water Level Sensor
-    wsen.physical_water_level_in(physical_water_level_sig);
-    wsen.sensor_water_level_out(sensor_water_level_sig);
+            // PH Level Sensor
+    phsen.physical_ph_level_in(physical_ph_level_sig);
+    phsen.sensor_ph_level_out(sensor_ph_level_sig);
 
         // Enviroment (Physical)
-            // Water Level
-    phys.actuator_water_add_active_in(actuator_water_add_active_sig);
-    phys.physical_water_level_out(physical_water_level_sig);
+            // PH Level
+    phys.actuator_ph_add_active_in(actuator_ph_add_active_sig);
+    phys.physical_ph_level_out(physical_ph_level_sig);
 
     // Simulation 
-    sc_start(24, SC_SEC);
+    sc_start(40, SC_SEC);
 
     return 0;
 }
