@@ -13,9 +13,12 @@ add_executable(hydro_sim
     main.cpp
     Microcontroller.cpp
     WaterAddSolenoid.cpp
-    WaterPump.cpp
     PhysicalModel.cpp
     WaterLevelSensor.cpp
+    NutrientPump.cpp
+    NutrientSensor.cpp
+    WaterPump.cpp
+    AirPump.cpp
 )
 
 target_link_libraries(hydro_sim PRIVATE SystemC::systemc)

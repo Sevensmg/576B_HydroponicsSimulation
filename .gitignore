@@ -5,3 +5,4 @@ out/
 *.dylib
 **/.DS_Store
 README.md
+CMakeLists.txt

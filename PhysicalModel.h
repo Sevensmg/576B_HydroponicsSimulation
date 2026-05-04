@@ -7,10 +7,11 @@ SC_MODULE(PhysicalModel) {
 public:
     // Inputs
     sc_in<bool> actuator_water_add_active_in;
-    sc_in<bool> actuator_water_pump_active_in;
+    sc_in<bool> actuator_nutrient_pump_active_in;
 
     // Outputs
     sc_out<double> physical_water_level_out;
+    sc_out<double> physical_nutrient_level_out;
 
     // Water level state and parameters
     double water_level;
@@ -18,6 +19,13 @@ public:
     double water_fill_rate_per_step;
     double min_water_level;
     double max_water_level;
+
+    double nutrient_level;
+    double nutrient_consumption_rate_per_step;
+    double nutrient_add_rate_per_step;
+    double min_nutrient_level;
+    double max_nutrient_level;
+
     sc_time model_update_period;
 
     SC_CTOR(PhysicalModel) :
@@ -27,6 +35,12 @@ public:
         water_fill_rate_per_step(0.50),
         min_water_level(0),                    
         max_water_level(45),                    // Max: ~5 L/plant * 8 plants = 40L + 5L (buffer) = 45L 
+        // Nutrient Level
+        nutrient_level(100.0),                  // Start at 100%
+        nutrient_consumption_rate_per_step(0.1),
+        nutrient_add_rate_per_step(1.0),
+        min_nutrient_level(0),
+        max_nutrient_level(200),                // Can go over 100 if overdosed
         // Time Step
         model_update_period(sc_time(1, SC_SEC))
     {
