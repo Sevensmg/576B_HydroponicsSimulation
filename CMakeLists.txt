@@ -4,8 +4,8 @@ project(HydroponicsSimulation LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Point CMake at your local SystemC install
-set(CMAKE_PREFIX_PATH "$ENV{HOME}/.local/systemc-2.3.3")
+# Point CMake at local SystemC install on Windows
+set(CMAKE_PREFIX_PATH "C:/Users/cemcc/Documents/systemc-2.3.3/systemc_install")
 
 find_package(SystemCLanguage CONFIG REQUIRED)
 
@@ -13,6 +13,7 @@ add_executable(hydro_sim
     main.cpp
     Microcontroller.cpp
     WaterAddSolenoid.cpp
+    WaterPump.cpp
     PhysicalModel.cpp
     WaterLevelSensor.cpp
 )

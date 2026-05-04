@@ -7,6 +7,7 @@ SC_MODULE(PhysicalModel) {
 public:
     // Inputs
     sc_in<bool> actuator_water_add_active_in;
+    sc_in<bool> actuator_water_pump_active_in;
 
     // Outputs
     sc_out<double> physical_water_level_out;
