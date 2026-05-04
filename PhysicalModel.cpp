@@ -15,9 +15,11 @@ double PhysicalModel::clamp(double value, double min_value, double max_value) {
 void PhysicalModel::update_model() {
     // Write initial condition
     physical_water_level_out.write(water_level);
+    physical_nutrient_level_out.write(nutrient_level);
 
     while (true) {
         bool solenoid_active = actuator_water_add_active_in.read();
+        bool nutrient_pump_active = actuator_nutrient_pump_active_in.read();
 
         // Natural water loss
         water_level -= water_loss_rate_per_step;
@@ -27,6 +29,14 @@ void PhysicalModel::update_model() {
             water_level += water_fill_rate_per_step;
         }
 
+        // Natural nutrient consumption
+        nutrient_level -= nutrient_consumption_rate_per_step;
+
+        // Nutrient addition from pump
+        if (nutrient_pump_active) {
+            nutrient_level += nutrient_add_rate_per_step;
+        }
+
         // Clamp to valid bounds
         water_level = clamp(
             water_level,
@@ -34,14 +44,22 @@ void PhysicalModel::update_model() {
             max_water_level
         );
 
-        // Publish updated water level
+        nutrient_level = clamp(
+            nutrient_level,
+            min_nutrient_level,
+            max_nutrient_level
+        );
+
+        // Publish updated values
         physical_water_level_out.write(water_level);
+        physical_nutrient_level_out.write(nutrient_level);
 
         std::cout << "[" << sc_time_stamp() << "] "
                   << "PhysicalModel: water_level="
                   << std::fixed << std::setprecision(2)
-                  << water_level << "L, solenoid_active="
-                  << solenoid_active
+                  << water_level << "L, nutrient_level="
+                  << nutrient_level << ", sol=" << solenoid_active
+                  << ", n_pump=" << nutrient_pump_active
                   << std::endl;
 
         wait(model_update_period);
