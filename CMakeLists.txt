@@ -13,6 +13,7 @@ add_executable(hydro_sim
     main.cpp
     Microcontroller.cpp
     WaterAddSolenoid.cpp
+    WaterPump.cpp
     PhysicalModel.cpp
     WaterLevelSensor.cpp
 )

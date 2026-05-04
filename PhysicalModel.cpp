@@ -18,6 +18,7 @@ void PhysicalModel::update_model() {
 
     while (true) {
         bool solenoid_active = actuator_water_add_active_in.read();
+        bool pump_active = actuator_water_pump_active_in.read();
 
         // Natural water loss
         water_level -= water_loss_rate_per_step;
@@ -41,7 +42,8 @@ void PhysicalModel::update_model() {
                   << "PhysicalModel: water_level="
                   << std::fixed << std::setprecision(2)
                   << water_level << "L, solenoid_active="
-                  << solenoid_active
+                  << solenoid_active << ", pump_active="
+                  << pump_active
                   << std::endl;
 
         wait(model_update_period);
