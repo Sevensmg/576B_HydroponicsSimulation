@@ -4,6 +4,7 @@
 #include <systemc.h>
 #include "Microcontroller.h"
 #include "WaterAddSolenoid.h"
+#include "NutrientPump.h"
 #include "PhysicalModel.h"
 #include "WaterLevelSensor.h"
 
@@ -14,10 +15,13 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<double> physical_water_level_sig;
     sc_signal<bool> actuator_water_add_cmd_sig;
     sc_signal<bool> actuator_water_add_active_sig;
+    sc_signal<bool> actuator_nutrient_pump_cmd_sig;
+    sc_signal<bool> actuator_nutrient_pump_active_sig;
 
     // Module Instantiation
     Microcontroller mc("mc");
     WaterAddSolenoid sol("sol");
+    NutrientPump npump("npump");
     PhysicalModel phys("phys");
     WaterLevelSensor wsen("wsen");
 
@@ -26,11 +30,16 @@ int sc_main(int argc, char* argv[]) {
             // Microcontroller
     mc.sensor_water_level_in(sensor_water_level_sig);
     mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
+    mc.actuator_nutrient_pump_cmd_out(actuator_nutrient_pump_cmd_sig);
 
         // Actuators
             // Water Add Solenoid
     sol.actuator_water_add_cmd_in(actuator_water_add_cmd_sig);
     sol.actuator_water_add_active_out(actuator_water_add_active_sig);
+
+            // Nutrient Pump
+    npump.actuator_nutrient_pump_cmd_in(actuator_nutrient_pump_cmd_sig);
+    npump.actuator_nutrient_pump_active_out(actuator_nutrient_pump_active_sig);
 
         // Sensors
             // Water Level Sensor
@@ -40,6 +49,7 @@ int sc_main(int argc, char* argv[]) {
         // Enviroment (Physical)
             // Water Level
     phys.actuator_water_add_active_in(actuator_water_add_active_sig);
+    phys.actuator_nutrient_pump_active_in(actuator_nutrient_pump_active_sig);
     phys.physical_water_level_out(physical_water_level_sig);
 
     // Simulation 

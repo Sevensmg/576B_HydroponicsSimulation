@@ -4,3 +4,4 @@ out/
 *.a
 *.dylib
 **/.DS_Store
+CMakeLists.txt
