@@ -18,6 +18,8 @@ public:
         // Water Level
     double low_threshold;
     double full_threshold;
+        // LED
+    bool led_cmd;
     sc_time control_period;
 
     SC_CTOR(Microcontroller) :

@@ -11,7 +11,7 @@ public:
 
     // Outputs
     sc_out<double> physical_water_level_out;
-    sc_out<bool> physical_led_state_out;
+    //sc_out<bool> physical_led_state_out;
 
     // Water level state and parameters
     double water_level;

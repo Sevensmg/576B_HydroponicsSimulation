@@ -13,7 +13,7 @@ void Microcontroller::control_loop() {
         bool water_add_cmd = actuator_water_add_cmd_out.read();
 
         // LEDs
-        uint led_cmd = actuator_led_cmd_out.read();
+        led_cmd = actuator_led_cmd_out.read();
 
 
         // Water Fill logic
@@ -26,7 +26,7 @@ void Microcontroller::control_loop() {
         // LED Logic | on 16 then off 8
         unsigned long elapsed_seconds = static_cast<unsigned long>(sc_time_stamp().to_seconds());
         unsigned long seconds_in_day = elapsed_seconds % (24 * 60 * 60);
-        bool led_cmd = seconds_in_day < (16 * 60 * 60);
+        led_cmd = seconds_in_day < (16 * 60 * 60);
 
         // Write to actuators
         actuator_water_add_cmd_out.write(water_add_cmd);

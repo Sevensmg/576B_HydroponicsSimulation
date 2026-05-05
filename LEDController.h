@@ -11,6 +11,10 @@ public:
     // Outputs
     sc_out<bool> actuator_led_state_out;
 
+    SC_CTOR(LEDController) {
+        SC_THREAD(run);
+    }
+
 private:
     void run();
 };

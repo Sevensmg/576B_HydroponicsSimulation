@@ -15,7 +15,7 @@ double PhysicalModel::clamp(double value, double min_value, double max_value) {
 void PhysicalModel::update_model() {
     // Write initial condition
     physical_water_level_out.write(water_level);
-    physical_led_state_out.write(false);
+    //physical_led_state_out.write(false);
 
     while (true) {
 
@@ -46,13 +46,14 @@ void PhysicalModel::update_model() {
 
         // Publish updated 
         physical_water_level_out.write(water_level);
-        physical_led_state_out.write(led_state);
+        //physical_led_state_out.write(led_state);
 
         std::cout << "[" << sc_time_stamp() << "] "
                   << "PhysicalModel: water_level="
                   << std::fixed << std::setprecision(2)
                   << water_level << "L, solenoid_active="
                   << solenoid_active
+                  << " , LED_active=" << led_state
                   << std::endl;
 
         wait(model_update_period);
