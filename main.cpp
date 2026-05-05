@@ -4,6 +4,7 @@
 #include <systemc.h>
 #include "Microcontroller.h"
 #include "WaterAddSolenoid.h"
+#include "LEDController.h"
 #include "PhysicalModel.h"
 #include "WaterLevelSensor.h"
 #include "LEDController.h"
@@ -38,7 +39,7 @@ int sc_main(int argc, char* argv[]) {
     sol.actuator_water_add_active_out(actuator_water_add_active_sig);
 
             // LEDs
-    led.actuator_led_cmd_in(actuator_led_cmd_sig)
+    led.actuator_led_cmd_in(actuator_led_cmd_sig);
     led.actuator_led_state_out(actuator_led_state_sig);
 
         // Sensors
@@ -50,7 +51,7 @@ int sc_main(int argc, char* argv[]) {
             // Water Level
     phys.actuator_water_add_active_in(actuator_water_add_active_sig);
     phys.physical_water_level_out(physical_water_level_sig);
-    led.actuator_led_state_in(actuator_led_state_sig);
+    phys.actuator_led_state_in(actuator_led_state_sig);
 
     // Simulation 
     sc_start(24, SC_SEC);

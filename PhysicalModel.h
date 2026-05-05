@@ -20,7 +20,7 @@ public:
     double min_water_level;
     double max_water_level;
     // LED Control
-    string led_state;
+    bool led_state;
     // Time
     sc_time model_update_period;
 

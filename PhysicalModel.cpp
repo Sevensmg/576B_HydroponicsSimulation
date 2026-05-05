@@ -38,7 +38,7 @@ void PhysicalModel::update_model() {
         );
 
     // LEDs
-        bool led_state = actuator_led_state_in.read();
+        led_state = actuator_led_state_in.read();
 
         if (led_state) {
             //update temperature
