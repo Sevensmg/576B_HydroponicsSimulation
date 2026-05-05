@@ -8,9 +8,9 @@ set(SYSTEMC_HOME "/home/luis/systemc/install")
 add_executable(hydro_sim
     main.cpp
     Microcontroller.cpp
-    PhAddSolenoid.cpp
+    WaterAddSolenoid.cpp
     PhysicalModel.cpp
-    PhLevelSensor.cpp
+    WaterLevelSensor.cpp
 )
 
 target_include_directories(hydro_sim PRIVATE
