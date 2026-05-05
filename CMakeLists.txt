@@ -15,6 +15,7 @@ add_executable(hydro_sim
     WaterAddSolenoid.cpp
     PhysicalModel.cpp
     WaterLevelSensor.cpp
+    LEDController.cpp
 )
 
 target_link_libraries(hydro_sim PRIVATE SystemC::systemc)

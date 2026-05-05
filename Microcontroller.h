@@ -12,6 +12,7 @@ public:
 
     // Outputs
     sc_out<bool> actuator_water_add_cmd_out;
+    sc_out<bool> actuator_led_cmd_out;
 
     // Tunable parameters
         // Water Level

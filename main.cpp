@@ -6,6 +6,7 @@
 #include "WaterAddSolenoid.h"
 #include "PhysicalModel.h"
 #include "WaterLevelSensor.h"
+#include "LEDController.h"
 
 int sc_main(int argc, char* argv[]) {
     // Variables
@@ -14,10 +15,13 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<double> physical_water_level_sig;
     sc_signal<bool> actuator_water_add_cmd_sig;
     sc_signal<bool> actuator_water_add_active_sig;
+    sc_signal<bool> actuator_led_cmd_sig;
+    sc_signal<bool> actuator_led_state_sig;
 
     // Module Instantiation
     Microcontroller mc("mc");
     WaterAddSolenoid sol("sol");
+    LEDController led("led");
     PhysicalModel phys("phys");
     WaterLevelSensor wsen("wsen");
 
@@ -26,11 +30,16 @@ int sc_main(int argc, char* argv[]) {
             // Microcontroller
     mc.sensor_water_level_in(sensor_water_level_sig);
     mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
+    mc.actuator_led_cmd_out(actuator_led_cmd_sig);
 
         // Actuators
             // Water Add Solenoid
     sol.actuator_water_add_cmd_in(actuator_water_add_cmd_sig);
     sol.actuator_water_add_active_out(actuator_water_add_active_sig);
+
+            // LEDs
+    led.actuator_led_cmd_in(actuator_led_cmd_sig)
+    led.actuator_led_state_out(actuator_led_state_sig);
 
         // Sensors
             // Water Level Sensor
@@ -41,6 +50,7 @@ int sc_main(int argc, char* argv[]) {
             // Water Level
     phys.actuator_water_add_active_in(actuator_water_add_active_sig);
     phys.physical_water_level_out(physical_water_level_sig);
+    led.actuator_led_state_in(actuator_led_state_sig);
 
     // Simulation 
     sc_start(24, SC_SEC);
