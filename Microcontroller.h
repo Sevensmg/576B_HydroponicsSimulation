@@ -12,11 +12,14 @@ public:
 
     // Outputs
     sc_out<bool> actuator_water_add_cmd_out;
+    sc_out<bool> actuator_led_cmd_out;
 
     // Tunable parameters
         // Water Level
     double low_threshold;
     double full_threshold;
+        // LED
+    bool led_cmd;
     sc_time control_period;
 
     SC_CTOR(Microcontroller) :
