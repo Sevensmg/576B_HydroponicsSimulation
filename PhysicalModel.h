@@ -7,16 +7,16 @@ SC_MODULE(PhysicalModel) {
 public:
     // Inputs
     sc_in<bool> actuator_ph_add_active_in;
+    sc_in<bool> actuator_water_add_active_in;
+    sc_in<bool> actuator_led_state_in;
+    sc_in<bool> actuator_nutrient_pump_active_in;
 
     // Outputs
     sc_out<double> physical_ph_level_out;
-  
-      sc_in<bool> actuator_water_add_active_in;
-    sc_in<bool> actuator_led_state_in;
-
-    // Outputs
     sc_out<double> physical_water_level_out;
-    //sc_out<bool> physical_led_state_out;
+    sc_out<double> physical_water_level_out;
+    sc_out<double> physical_nutrient_level_out;
+
 
     // Water ph state and parameters
     double ph_level;
@@ -26,8 +26,7 @@ public:
     double natural_base_increase_rate_per_step;
     double min_ph_level;
     double max_ph_level;
-  
-      // Water level state and parameters
+    // Water level state and parameters
     double water_level;
     double water_loss_rate_per_step;
     double water_fill_rate_per_step;
@@ -35,6 +34,13 @@ public:
     double max_water_level;
     // LED Control
     bool led_state;
+    // Nutrients
+    double nutrient_level;
+    double nutrient_consumption_rate_per_step;
+    double nutrient_add_rate_per_step;
+    double min_nutrient_level;
+    double max_nutrient_level;
+
     sc_time model_update_period;
 
 
@@ -56,6 +62,13 @@ public:
         max_water_level(45),                    // Max: ~5 L/plant * 8 plants = 40L + 5L (buffer) = 45L 
         // LED Control
 
+        // Nutrient Level
+        nutrient_level(100.0),                  // Start at 100%
+        nutrient_consumption_rate_per_step(0.1),
+        nutrient_add_rate_per_step(1.0),
+        min_nutrient_level(0),
+        max_nutrient_level(200),                // Can go over 100 if overdosed
+        
         // Time Step
         model_update_period(sc_time(1, SC_SEC))
     {

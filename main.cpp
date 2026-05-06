@@ -9,6 +9,10 @@
 #include "WaterAddSolenoid.h"
 #include "WaterLevelSensor.h"
 #include "LEDController.h"
+#include "NutrientPump.h"
+#include "NutrientSensor.h"
+#include "WaterPump.h"
+#include "AirPump.h"
 
 int sc_main(int argc, char* argv[]) {
     // Variables
@@ -24,6 +28,15 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool> actuator_led_cmd_sig;
     sc_signal<bool> actuator_led_state_sig;
 
+    sc_signal<double> sensor_nutrient_level_sig;
+    sc_signal<double> physical_nutrient_level_sig;
+    sc_signal<bool> actuator_nutrient_pump_cmd_sig;
+    sc_signal<bool> actuator_nutrient_pump_active_sig;
+
+    sc_signal<bool> actuator_water_pump_cmd_sig;
+    sc_signal<bool> actuator_water_pump_active_sig;
+    sc_signal<bool> actuator_air_pump_active_sig;
+
     // Module Instantiation
     Microcontroller mc("mc");
     PhAddSolenoid phsol("phsol");
@@ -32,6 +45,10 @@ int sc_main(int argc, char* argv[]) {
     PhysicalModel phys("phys");
     PhSensor phsen("phsen");
     WaterLevelSensor wsen("wsen");
+    NutrientPump npump("npump");
+    NutrientSensor nsen("nsen");
+    WaterPump wpump("wpump");
+    AirPump apump("apump");
 
     // Connect Ports on Modules
         // Controller
@@ -40,7 +57,10 @@ int sc_main(int argc, char* argv[]) {
     mc.actuator_ph_add_cmd_out(actuator_ph_add_cmd_sig);
 
     mc.sensor_water_level_in(sensor_water_level_sig);
+    mc.sensor_nutrient_level_in(sensor_nutrient_level_sig);
     mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
+    mc.actuator_water_pump_cmd_out(actuator_water_pump_cmd_sig);
+    mc.actuator_nutrient_pump_cmd_out(actuator_nutrient_pump_cmd_sig);
 
     mc.actuator_led_cmd_out(actuator_led_cmd_sig);
 
@@ -56,25 +76,41 @@ int sc_main(int argc, char* argv[]) {
             // LEDs
     led.actuator_led_cmd_in(actuator_led_cmd_sig);
     led.actuator_led_state_out(actuator_led_state_sig);
+            // Nutrient Pump
+    npump.actuator_nutrient_pump_cmd_in(actuator_nutrient_pump_cmd_sig);
+    npump.actuator_nutrient_pump_active_out(actuator_nutrient_pump_active_sig);
+
+            // Water Pump
+    wpump.actuator_water_pump_cmd_in(actuator_water_pump_cmd_sig);
+    wpump.actuator_water_pump_active_out(actuator_water_pump_active_sig);
+
+            // Air Pump (triggered by water pump command)
+    apump.actuator_air_pump_cmd_in(actuator_water_pump_cmd_sig);
+    apump.actuator_air_pump_active_out(actuator_air_pump_active_sig);
 
         // Sensors
             // PH Level Sensor
     phsen.physical_ph_level_in(physical_ph_level_sig);
     phsen.sensor_ph_level_out(sensor_ph_level_sig);
-
             // Water Level Sensor
     wsen.physical_water_level_in(physical_water_level_sig);
     wsen.sensor_water_level_out(sensor_water_level_sig);
+            // Nutrient Sensor
+    nsen.physical_nutrient_level_in(physical_nutrient_level_sig);
+    nsen.sensor_nutrient_level_out(sensor_nutrient_level_sig);
 
         // Enviroment (Physical)
             // PH Level
     phys.actuator_ph_add_active_in(actuator_ph_add_active_sig);
     phys.physical_ph_level_out(physical_ph_level_sig);
-    
             // Water Level
     phys.actuator_water_add_active_in(actuator_water_add_active_sig);
     phys.physical_water_level_out(physical_water_level_sig);
+            // LED
     phys.actuator_led_state_in(actuator_led_state_sig);
+            // Nutrients
+    phys.physical_nutrient_level_out(physical_nutrient_level_sig);
+    phys.actuator_nutrient_pump_active_in(actuator_nutrient_pump_active_sig);
 
     // Simulation 
     sc_start(40, SC_SEC);

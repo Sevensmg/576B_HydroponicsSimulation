@@ -21,7 +21,10 @@ void PhysicalModel::update_model() {
       
         bool ph_solenoid_active = actuator_ph_add_active_in.read();
         physical_water_level_out.write(water_level);
-    //physical_led_state_out.write(false);
+        physical_nutrient_level_out.write(nutrient_level);
+
+        bool solenoid_active = actuator_water_add_active_in.read();
+        bool nutrient_pump_active = actuator_nutrient_pump_active_in.read();
 
     // Water
         bool solenoid_active = actuator_water_add_active_in.read();
@@ -49,6 +52,13 @@ void PhysicalModel::update_model() {
 
          if (ph_solenoid_active && ph_level < 5.5) {
             ph_level += base_increase_rate_per_step;
+         }
+        // Natural nutrient consumption
+        nutrient_level -= nutrient_consumption_rate_per_step;
+
+        // Nutrient addition from pump
+        if (nutrient_pump_active) {
+            nutrient_level += nutrient_add_rate_per_step;
         }
 
         // Clamp to valid bounds
@@ -65,19 +75,17 @@ void PhysicalModel::update_model() {
             max_water_level
         );
 
-
-        // Publish updated water level
-        physical_ph_level_out.write(ph_level);
-      // LEDs
+        // LEDs
         led_state = actuator_led_state_in.read();
 
         if (led_state) {
             //update temperature
         }
 
-        // Publish updated 
+        // Publish updated water level
         physical_water_level_out.write(water_level);
-        //physical_led_state_out.write(led_state);
+        // Publish updated pH
+        physical_ph_level_out.write(ph_level);
 
         std::cout << "[" << sc_time_stamp() << "] "
                   << "PhysicalModel: ph_level="
@@ -86,6 +94,15 @@ void PhysicalModel::update_model() {
                   << ph_solenoid_active
                   << " , LED_active=" << led_state
                   << std::endl;
+        nutrient_level = clamp(
+            nutrient_level,
+            min_nutrient_level,
+            max_nutrient_level
+        );
+
+        // Publish updated values
+        physical_water_level_out.write(water_level);
+        physical_nutrient_level_out.write(nutrient_level);
 
         std::cout << "[" << sc_time_stamp() << "] "
                   << "PhysicalModel: water_level="
@@ -93,6 +110,9 @@ void PhysicalModel::update_model() {
                   << water_level << "L, solenoid_active="
                   << solenoid_active
                   << " , LED_active=" << led_state
+                  << water_level << "L, nutrient_level="
+                  << nutrient_level << ", sol=" << solenoid_active
+                  << ", n_pump=" << nutrient_pump_active
                   << std::endl;
 
         wait(model_update_period);
