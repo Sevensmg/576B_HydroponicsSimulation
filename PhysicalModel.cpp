@@ -27,7 +27,6 @@ void PhysicalModel::update_model() {
         bool nutrient_pump_active = actuator_nutrient_pump_active_in.read();
 
     // Water
-        bool solenoid_active = actuator_water_add_active_in.read();
       
         // Natural water loss
         water_level -= water_loss_rate_per_step;

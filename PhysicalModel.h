@@ -14,7 +14,6 @@ public:
     // Outputs
     sc_out<double> physical_ph_level_out;
     sc_out<double> physical_water_level_out;
-    sc_out<double> physical_water_level_out;
     sc_out<double> physical_nutrient_level_out;
 
 
@@ -68,7 +67,7 @@ public:
         nutrient_add_rate_per_step(1.0),
         min_nutrient_level(0),
         max_nutrient_level(200),                // Can go over 100 if overdosed
-        
+
         // Time Step
         model_update_period(sc_time(1, SC_SEC))
     {
