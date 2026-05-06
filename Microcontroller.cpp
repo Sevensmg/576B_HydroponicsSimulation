@@ -27,7 +27,7 @@ void Microcontroller::control_loop() {
         }
       
               // ph logic
-        if ((ph_level < low_threshold || ph_level > high_threshold)) {
+        if ((ph_level < ph_low_threshold || ph_level > ph_high_threshold)) {
 
             ph_cmd = true;
         } 
@@ -48,7 +48,7 @@ void Microcontroller::control_loop() {
         actuator_ph_add_cmd_out.write(ph_cmd);
        
         std::cout << "[" << sc_time_stamp() << "] "
-                  << "MCU: ph_level=" << std::fixed << std::setprecision(2)
+                  << "MCU: ph_level= " << std::fixed << std::setprecision(2)
                   << ph_level << " ph_add_cmd=" << ph_cmd
                   << "MCU: water_level=" << std::fixed << std::setprecision(2)
                   << level << "%, water_add_cmd=" << water_add_cmd

@@ -19,8 +19,8 @@ public:
 
     SC_CTOR(PhSensor) :
         sample_period(sc_time(1, SC_SEC)),
-        min_measurable_level(0.0),
-        max_measurable_level(14.0)
+        ph_min_measurable_level(0.0),
+        ph_max_measurable_level(14.0)
     {
         SC_THREAD(sample_loop);
     }
