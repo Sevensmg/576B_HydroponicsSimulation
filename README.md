@@ -14,6 +14,8 @@ Simulation of a simple hydroponics system for ECE576B at the University of Arizo
 ```cmake ..```
 
 ```cmake .. -DCMAKE_PREFIX_PATH="$HOME/.local/systemc-2.3.3"```
+or
+```cmake .. -DSYSTEMC_HOME="$HOME/.local/systemc-2.3.3"```
 
 ### 4. Compile the files into the simulation program
 ```cmake --build .```
