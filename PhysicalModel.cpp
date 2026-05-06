@@ -14,14 +14,18 @@ double PhysicalModel::clamp(double value, double min_value, double max_value) {
 
 void PhysicalModel::update_model() {
     // Write initial condition
+    physical_ph_level_out.write(ph_level);
     physical_water_level_out.write(water_level);
-    //physical_led_state_out.write(false);
-
+  
     while (true) {
+      
+        bool ph_solenoid_active = actuator_ph_add_active_in.read();
+        physical_water_level_out.write(water_level);
+    //physical_led_state_out.write(false);
 
     // Water
         bool solenoid_active = actuator_water_add_active_in.read();
-
+      
         // Natural water loss
         water_level -= water_loss_rate_per_step;
 
@@ -30,14 +34,41 @@ void PhysicalModel::update_model() {
             water_level += water_fill_rate_per_step;
         }
 
+        // Natural water alkalinization
+        //ph_level += natural_base_increase_rate_per_step;
+
+        // Natural water acidification
+        ph_level += natural_acid_increase_rate_per_step;
+
+        //Assuming our plants make water more alkaline
+   
+        // Acid addition from solenoid
+        if (ph_solenoid_active && ph_level > 6.5) {
+            ph_level += acid_increase_rate_per_step;
+        }
+
+         if (ph_solenoid_active && ph_level < 5.5) {
+            ph_level += base_increase_rate_per_step;
+        }
+
         // Clamp to valid bounds
+        ph_level = clamp(
+            ph_level,
+            min_ph_level,
+            max_ph_level
+        );
+      
+             // Clamp to valid bounds
         water_level = clamp(
             water_level,
             min_water_level,
             max_water_level
         );
 
-    // LEDs
+
+        // Publish updated water level
+        physical_ph_level_out.write(ph_level);
+      // LEDs
         led_state = actuator_led_state_in.read();
 
         if (led_state) {
@@ -49,9 +80,9 @@ void PhysicalModel::update_model() {
         //physical_led_state_out.write(led_state);
 
         std::cout << "[" << sc_time_stamp() << "] "
-                  << "PhysicalModel: water_level="
+                  << "PhysicalModel: ph_level="
                   << std::fixed << std::setprecision(2)
-                  << water_level << "L, solenoid_active="
+                  << ph_level << " solenoid_active="
                   << solenoid_active
                   << " , LED_active=" << led_state
                   << std::endl;
