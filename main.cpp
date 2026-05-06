@@ -6,6 +6,11 @@
 #include "PhAddSolenoid.h"
 #include "PhysicalModel.h"
 #include "PhLevelSensor.h"
+#include "WaterAddSolenoid.h"
+#include "LEDController.h"
+#include "PhysicalModel.h"
+#include "WaterLevelSensor.h"
+#include "LEDController.h"
 
 int sc_main(int argc, char* argv[]) {
     // Variables
@@ -18,6 +23,17 @@ int sc_main(int argc, char* argv[]) {
     // Module Instantiation
     Microcontroller mc("mc");
     PhAddSolenoid phsol("phsol");
+    sc_signal<double> sensor_water_level_sig;
+    sc_signal<double> physical_water_level_sig;
+    sc_signal<bool> actuator_water_add_cmd_sig;
+    sc_signal<bool> actuator_water_add_active_sig;
+    sc_signal<bool> actuator_led_cmd_sig;
+    sc_signal<bool> actuator_led_state_sig;
+
+    // Module Instantiation
+    Microcontroller mc("mc");
+    WaterAddSolenoid sol("sol");
+    LEDController led("led");
     PhysicalModel phys("phys");
     PhSensor phsen("phsen");
 
@@ -26,11 +42,18 @@ int sc_main(int argc, char* argv[]) {
             // Microcontroller
     mc.sensor_ph_level_in(sensor_ph_level_sig);
     mc.actuator_ph_add_cmd_out(actuator_ph_add_cmd_sig);
+    mc.sensor_water_level_in(sensor_water_level_sig);
+    mc.actuator_water_add_cmd_out(actuator_water_add_cmd_sig);
+    mc.actuator_led_cmd_out(actuator_led_cmd_sig);
 
         // Actuators
             // Acid Add Solenoid
     phsol.actuator_ph_add_cmd_in(actuator_ph_add_cmd_sig);
     phsol.actuator_ph_add_active_out(actuator_ph_add_active_sig);
+
+            // LEDs
+    led.actuator_led_cmd_in(actuator_led_cmd_sig);
+    led.actuator_led_state_out(actuator_led_state_sig);
 
         // Sensors
             // PH Level Sensor
@@ -41,6 +64,10 @@ int sc_main(int argc, char* argv[]) {
             // PH Level
     phys.actuator_ph_add_active_in(actuator_ph_add_active_sig);
     phys.physical_ph_level_out(physical_ph_level_sig);
+            // Water Level
+    phys.actuator_water_add_active_in(actuator_water_add_active_sig);
+    phys.physical_water_level_out(physical_water_level_sig);
+    phys.actuator_led_state_in(actuator_led_state_sig);
 
     // Simulation 
     sc_start(40, SC_SEC);
