@@ -17,7 +17,7 @@ void PhysicalModel::update_model() {
     physical_ph_level_out.write(ph_level);
 
     while (true) {
-        bool solenoid_active = actuator_ph_add_active_in.read();
+        bool ph_solenoid_active = actuator_ph_add_active_in.read();
 
         // Natural water alkalinization
         //ph_level += natural_base_increase_rate_per_step;
@@ -28,11 +28,11 @@ void PhysicalModel::update_model() {
         //Assuming our plants make water more alkaline
    
         // Acid addition from solenoid
-        if (solenoid_active && ph_level > 6.5) {
+        if (ph_solenoid_active && ph_level > 6.5) {
             ph_level += acid_increase_rate_per_step;
         }
 
-         if (solenoid_active && ph_level < 5.5) {
+         if (ph_solenoid_active && ph_level < 5.5) {
             ph_level += base_increase_rate_per_step;
         }
 

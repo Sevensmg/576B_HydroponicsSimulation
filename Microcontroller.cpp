@@ -8,24 +8,24 @@ void Microcontroller::control_loop() {
     
     while (true) {
 
-        double level = sensor_ph_level_in.read();
-        bool cmd = actuator_ph_add_cmd_out.read();
+        double ph_level = sensor_ph_level_in.read();
+        bool ph_cmd = actuator_ph_add_cmd_out.read();
        
         // Fill logic
-        if ((level < low_threshold || level > high_threshold)) {
+        if ((ph_level < low_threshold || ph_level > high_threshold)) {
 
-            cmd = true;
+            ph_cmd = true;
         } 
         
         else{//if (level > low_threshold && level < high_threshold) {
-            cmd = false;
+            ph_cmd = false;
         }
 
-       actuator_ph_add_cmd_out.write(cmd);
+       actuator_ph_add_cmd_out.write(ph_cmd);
        
         std::cout << "[" << sc_time_stamp() << "] "
                   << "MCU: ph_level=" << std::fixed << std::setprecision(2)
-                  << level << " ph_add_cmd=" << cmd
+                  << ph_level << " ph_add_cmd=" << ph_cmd
                   << std::endl;
 
         wait(control_period);

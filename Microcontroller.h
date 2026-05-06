@@ -15,14 +15,14 @@ public:
 
     // Tunable parameters
         // ph Level
-    double low_threshold;
-    double high_threshold;
+    double ph_low_threshold;
+    double ph_high_threshold;
     sc_time control_period;
 
     SC_CTOR(Microcontroller) :
         // PH Level - Ideal is 5.5-6.5
-        low_threshold(6 - 0.5),
-        high_threshold(6 + 0.5),
+        ph_low_threshold(6 - 0.5),
+        ph_high_threshold(6 + 0.5),
         // Time Step
         control_period(sc_time(1, SC_SEC))
     {

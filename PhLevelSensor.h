@@ -14,8 +14,8 @@ public:
     // Sensor parameters
     sc_time sample_period;
 
-    double min_measurable_level;
-    double max_measurable_level;
+    double ph_min_measurable_level;
+    double ph_max_measurable_level;
 
     SC_CTOR(PhSensor) :
         sample_period(sc_time(1, SC_SEC)),
@@ -27,7 +27,7 @@ public:
 
 private:
     void sample_loop();
-    double clamp(double value, double min_value, double max_value);
+    double clamp(double value, double ph_min_value, double ph_max_value);
 };
 
 #endif
